@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Finance</title>
+    <link rel="stylesheet" href="nebula.css">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div id="auth-container" class="auth-container">
+        <div class="auth-box">
+            <h1>Nebula Finance</h1>
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="E-mail">
+                <input type="password" id="login-password" placeholder="Senha">
+                <button onclick="login()">Entrar</button>
+                <p class="auth-link" onclick="showRegister()">Criar conta</p>
+            </div>
+            <div id="register-form" style="display:none;">
+                <input type="text" id="register-name" placeholder="Nome">
+                <input type="email" id="register-email" placeholder="E-mail">
+                <input type="password" id="register-password" placeholder="Senha">
+                <button onclick="register()">Registrar</button>
+                <p class="auth-link" onclick="showLogin()">Já tem conta? Entrar</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" style="display:none;">
+        <header class="app-header">
+            <div class="logo">Nebula</div>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showDashboard()">Dashboard</a></li>
+                    <li><a href="#" onclick="showTransactions()">Transações</a></li>
+                    <li><a href="#" onclick="showGoals()">Metas</a></li>
+                    <li><a href="#" onclick="showReports()">Relatórios</a></li>
+                    <li><a href="#" onclick="showSettings()">Configurações</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu" onclick="toggleUserMenu()">
+                <span id="user-email"></span>
+                <div id="user-dropdown" style="display:none;">
+                    <a href="#" onclick="logout()">Sair</a>
+                </div>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <!-- Conteúdo dinâmico será injetado aqui -->
+        </main>
+
+        <div id="alert-container" class="alert-container"></div>
+    </div>
+
+    <script src="nebula.js"></script>
+    <script>
+        async function loadPyodide() {
+            let pyodide = await loadPyodide({
+                indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/"
+            });
+            await pyodide.loadPackage("micropip");
+            await pyodide.runPythonAsync(`
+                import micropip
+                await micropip.install('pandas')
+                await micropip.install('numpy')
+            `);
+            return pyodide;
+        }
+        
+        let pyodideReady = loadPyodide();
+    </script>
+</body>
+</html>
